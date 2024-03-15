@@ -59,7 +59,7 @@ fun VideoViewerScreen(
         mutableStateOf<PlayerV2Info?>(null)
     }
     var dash by rememberSaveable {
-        mutableStateOf<PlayerAPI.DashItem?>(null)
+        mutableStateOf<PlayerAPI.Dash?>(null)
     }
     LaunchedEffect(Unit){
         videoInfo = BiliApiService.videoAPI.infoAwait(id, type).data
@@ -73,17 +73,14 @@ fun VideoViewerScreen(
         playerInfo = info.await()
 
         val playUrl = url.await()
-        dash = playUrl.dash?.video!!.find {
-            it.id <= 48
-        }!!
-
+        dash = playUrl.dash
         Log.info { dash.toString() }
     }
     LaunchedEffect(dash) {
         if (dash == null) return@LaunchedEffect
         val dash = dash!!
-        val videoUrl = dash.base_url
-        exoPlayer.setMediaItem(MediaItem.fromUri(videoUrl))
+        val video = dash.video.first()
+        exoPlayer.setMediaItem(MediaItem.fromUri(video.base_url))
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
     }

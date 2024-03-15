@@ -60,10 +60,12 @@ fun RecommendScreen(navigator: DestinationsNavigator) = Box(
         mutableStateListOf<VideoInfo>()
     }
     var needFetch by rememberSaveable { mutableStateOf(true) }
-
+    var fetching by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(needFetch){
         if (!needFetch) return@LaunchedEffect
+
+        fetching = true
         repeat(2){
             val info = BiliApiService.homeApi.recommendListAwait(0).data.items.map {
                 VideoInfo(
@@ -76,14 +78,13 @@ fun RecommendScreen(navigator: DestinationsNavigator) = Box(
             }
             recommends.addAll(info)
         }
+        fetching = false
         needFetch = false
     }
 
-    // TODO: Performance improve
     LazyColumn(state = listState) {
         itemsIndexed(
-            recommends,
-            contentType = { _, video -> video }
+            recommends
         ) {_:Int, video:VideoInfo ->
             OutlinedCard(
                 border = BorderStroke(1.dp, Color.Black),
@@ -98,7 +99,7 @@ fun RecommendScreen(navigator: DestinationsNavigator) = Box(
                     leadingContent = {
                         AsyncImage(
                             video.cover, null,
-                            contentScale = ContentScale.Crop, // 不裁剪 不填充空白 最大可能截取原始图片
+                            contentScale = ContentScale.Crop, // 不填充空白 最大可能截取原始图片
                             modifier = Modifier
                                 .height(100.dp)
                                 .width(160.dp)

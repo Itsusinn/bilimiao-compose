@@ -34,50 +34,48 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @RootNavGraph(start = true)
 @Composable
 @Destination
-fun HomeScreen(navigator: DestinationsNavigator){
-
-
+fun HomeScreen(navigator: DestinationsNavigator) {
     var topBarState by rememberSaveable { mutableIntStateOf(1) }
     val pagerState = rememberPagerState(topBarState) { 3 }
-    LaunchedEffect(pagerState.targetPage){
+    LaunchedEffect(pagerState.targetPage) {
         topBarState = pagerState.targetPage
     }
-    LaunchedEffect(topBarState){
+    LaunchedEffect(topBarState) {
         pagerState.animateScrollToPage(topBarState)
     }
     Column(
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.fillMaxHeight(),
     ) {
         TabRow(topBarState) {
             Tab(
                 topBarState == 0,
                 onClick = { topBarState = 0 },
                 icon = { Icon(Icons.Filled.Recommend, "") },
-                text = { Text(text = "Recommend") }
+                text = { Text(text = "Recommend") },
             )
             Tab(
                 topBarState == 1,
                 onClick = { topBarState = 1 },
                 text = { Text("Popular") },
-                icon = { Icon(Icons.Filled.Whatshot,"") }
+                icon = { Icon(Icons.Filled.Whatshot, "") },
             )
             Tab(
                 topBarState == 1,
                 onClick = { topBarState = 2 },
-                icon = { Icon(Icons.Filled.DynamicFeed,"") },
-                text = { Text(text = "Posts") }
+                icon = { Icon(Icons.Filled.DynamicFeed, "") },
+                text = { Text(text = "Posts") },
             )
         }
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-
-        ) {index ->
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1f),
+        ) { index ->
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 when (index) {
                     0 -> {

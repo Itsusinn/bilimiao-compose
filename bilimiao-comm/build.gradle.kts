@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serde)
     alias(libs.plugins.ksp)
     alias(libs.plugins.protobuf)
 }
@@ -90,7 +91,9 @@ dependencies {
     implementation(libs.grpc.protobuf.lite)
     implementation(libs.grpc.stub)
     implementation(libs.kotlinx.coroutines.android)
-    implementation("javax.annotation:javax.annotation-api:1.3.2")
+    implementation(libs.javax.annotation.api)
+
+    implementation(libs.kotlinx.serde.json)
 
 
     testImplementation(libs.junit)

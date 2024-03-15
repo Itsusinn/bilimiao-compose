@@ -3,9 +3,11 @@ package com.a10miaomiao.bilimiao.comm.network
 import android.webkit.CookieManager
 import com.a10miaomiao.bilimiao.comm.BilimiaoCommApp
 import com.a10miaomiao.bilimiao.comm.utils.Log
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNamingStrategy
+import kotlinx.serialization.json.decodeFromStream
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -103,32 +105,20 @@ class MiaoHttp(var url: String? = null) {
         return call()
     }
 
-//    fun rxCall() = Observable.create<Response> {
-//        var response = call()
-//        if (response.isSuccessful) {
-//            it.onNext(response)
-//            it.onComplete()
-//        } else {
-//            it.onError(Exception("MiaoHttp: error"))
-//        }
-//    }
-
     companion object {
         fun request(url: String? = null, init: (MiaoHttp.() -> Unit)? = null) = MiaoHttp(url).apply {
             init?.invoke(this)
         }
 
-        inline fun <reified T> gsonConverterFactory(): (response: Response) -> T = { response ->
-            val jsonStr = response.body!!.string()
-            Gson().fromJson(jsonStr, object : TypeToken<T>() {}.type)
+        @OptIn(ExperimentalSerializationApi::class)
+        val JSON = Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+            namingStrategy = JsonNamingStrategy.SnakeCase
         }
-
-        inline fun <reified T> Response.gson(isDebug: Boolean = false): T {
-            val jsonStr = this.body!!.string()
-            if (isDebug) {
-                Log.log(jsonStr)
-            }
-            return Gson().fromJson(jsonStr, object : TypeToken<T>() {}.type)
+        @OptIn(ExperimentalSerializationApi::class)
+        inline fun <reified T> Response.json(): T {
+            return JSON.decodeFromStream(body!!.byteStream())
         }
 
         const val GET = "GET"

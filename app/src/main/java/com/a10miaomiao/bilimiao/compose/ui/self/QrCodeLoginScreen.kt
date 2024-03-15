@@ -21,7 +21,7 @@ import com.a10miaomiao.bilimiao.comm.entity.ResultInfo
 import com.a10miaomiao.bilimiao.comm.entity.auth.LoginInfo
 import com.a10miaomiao.bilimiao.comm.entity.auth.QRLoginInfo
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
-import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.gson
+import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.json
 import com.a10miaomiao.bilimiao.comm.utils.Log
 import com.a10miaomiao.bilimiao.compose.state.UserState
 import com.a10miaomiao.bilimiao.compose.ui.destinations.SelfScreenDestination
@@ -54,7 +54,7 @@ fun QrCodeLoginScreen(navigator: DestinationsNavigator) {
         val res = BiliApiService.authApi
             .qrCode()
             .awaitCall()
-            .gson<ResultInfo<QRLoginInfo>>()
+            .json<ResultInfo<QRLoginInfo>>()
 
         if (res.isSuccess) {
             qrCodeContent = res.data.url
@@ -67,7 +67,7 @@ fun QrCodeLoginScreen(navigator: DestinationsNavigator) {
     LaunchedEffect(authCode){
         if (authCode.isEmpty()) return@LaunchedEffect
         while (true){
-            val res = BiliApiService.authApi.checkQrCode(authCode).awaitCall().gson<ResultInfo<LoginInfo.QrLoginInfo>>()
+            val res = BiliApiService.authApi.checkQrCode(authCode).awaitCall().json<ResultInfo<LoginInfo.QrLoginInfo>>()
             when(res.code) {
                 86039 -> {
                     // 未确认

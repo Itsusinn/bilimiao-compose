@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serde)
     alias(libs.plugins.ksp)
 }
 
@@ -122,13 +123,13 @@ dependencies {
     implementation(libs.media3.exoplayer.dash)
 
     // serde & net
-    implementation(libs.gson)
+    implementation(libs.kotlinx.serde.json) //!! https://github.com/Kotlin/kotlinx.serialization?tab=readme-ov-file#android
+    // implementation(libs.gson)
     implementation(libs.okhttp3)
     implementation(libs.grpc.protobuf.lite)
     // implementation(libs.grpc.stub)
 
     implementation(project(":bilimiao-comm"))
-    implementation(project(":bilimiao-download"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.test.espresso)

@@ -64,7 +64,9 @@ object Log {
         AndroidLog.i(msg::class.java.name.simpleName(), msg())
     }
     fun debug(msg: () -> String){
-        AndroidLog.d(msg::class.java.name.simpleName(), msg())
+        if (isDebug){
+            AndroidLog.d(msg::class.java.name.simpleName(), msg())
+        }
     }
     // nested class in kotlin dont have simple name
     private fun String.simpleName() = substring(lastIndexOf('.')+1, indexOf("$"))

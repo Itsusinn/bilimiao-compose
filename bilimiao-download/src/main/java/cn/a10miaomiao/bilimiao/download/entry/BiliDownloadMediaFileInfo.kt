@@ -56,9 +56,9 @@ sealed class BiliDownloadMediaFileInfo {
         var size: Long,
         val md5: String,
         val no_rexcode: Boolean,
-        val frame_rate: String,
-        val width: Int,
-        val height: Int,
+        val frame_rate: String?,
+        val width: Int?,
+        val height: Int?,
         val dash_drm_type: Int,
     )
 

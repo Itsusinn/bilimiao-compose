@@ -19,6 +19,9 @@ kotlin-coroutine-android = "1.8.0"
 androidx-browser = "1.8.0"
 protoc = "3.12.0"
 
+# kotlinx
+kotlinx-serde = "1.6.3"
+
 # test
 junit = "4.+"
 androidx-test-junit = "1.1.5"
@@ -75,8 +78,9 @@ grpc-stub = { group = "io.grpc", name = "grpc-stub", version.ref = "grpc" }
 protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protoc" }
 
 
-# androidx
+# kotlinx
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlin-coroutine-android" }
+kotlinx-serde-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serde" }
 
 # test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -88,6 +92,11 @@ android-application = { id = "com.android.application", version.ref = "android-p
 android-library = { id = "com.android.library", version.ref = "android-plugin" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serde = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-plugin" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+
+

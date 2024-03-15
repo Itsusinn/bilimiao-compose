@@ -6,7 +6,7 @@ import com.a10miaomiao.bilimiao.comm.entity.video.VideoInfo
 import com.a10miaomiao.bilimiao.comm.network.ApiHelper
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
 import com.a10miaomiao.bilimiao.comm.network.MiaoHttp
-import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.gson
+import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -30,7 +30,7 @@ class VideoAPI {
         id: String,
         type: String = "AV"
     ): ResultInfo<VideoInfo> = withContext(Dispatchers.IO){
-        return@withContext info(id, type).awaitCall().gson<ResultInfo<VideoInfo>>()
+        return@withContext info(id, type).awaitCall().json<ResultInfo<VideoInfo>>()
     }
 
     /**

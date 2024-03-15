@@ -2,8 +2,10 @@ package com.a10miaomiao.bilimiao.comm.entity.player
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class PlayerV2Info(
     val aid: Int,
     val allow_bp: Boolean,
@@ -45,12 +47,14 @@ data class PlayerV2Info(
 ) : Parcelable {
 
     @Parcelize
+    @Serializable
     data class Fawkes(
         val config_version: Int,
         val ff_version: Int
     ) : Parcelable
 
     @Parcelize
+    @Serializable
     data class IpInfo(
         val city: String,
         val country: String,
@@ -90,6 +94,7 @@ data class PlayerV2Info(
     )
 
     @Parcelize
+    @Serializable
     data class Subtitle(
         val allow_submit: Boolean,
         val lan: String,
@@ -116,10 +121,12 @@ data class PlayerV2Info(
         val labels: Labels
     )
 
+    @Serializable
     data class Flv(
         val labels: Labels
     )
 
+    @Serializable
     data class Labels(
         val pcdn_group: String,
         val pcdn_stage: String,
@@ -129,6 +136,7 @@ data class PlayerV2Info(
     )
 
     @Parcelize
+    @Serializable
     data class SubtitleX(
         val ai_status: Int,
         val ai_type: Int,
@@ -141,6 +149,7 @@ data class PlayerV2Info(
         val type: Int
     ) : Parcelable
 
+    @Serializable
     data class Label(
         val bg_color: String,
         val bg_style: Int,

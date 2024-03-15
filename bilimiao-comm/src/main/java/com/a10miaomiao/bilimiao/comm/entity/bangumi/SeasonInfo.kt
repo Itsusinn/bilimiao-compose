@@ -2,9 +2,11 @@ package com.a10miaomiao.bilimiao.comm.entity.bangumi
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 @Parcelize
+@Serializable
 data class SeasonInfo(
     val is_new: Int,
     val season_id: String,

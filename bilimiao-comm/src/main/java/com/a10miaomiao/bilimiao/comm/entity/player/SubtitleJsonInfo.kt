@@ -1,5 +1,8 @@
 package com.a10miaomiao.bilimiao.comm.entity.player
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SubtitleJsonInfo(
     val font_size: Float,
     val font_color: String,
@@ -8,6 +11,7 @@ data class SubtitleJsonInfo(
     val Stroke: String,
     val body: List<ItemInfo>,
 ) {
+    @Serializable
     data class ItemInfo(
         val from: Double,
         val to: Double,

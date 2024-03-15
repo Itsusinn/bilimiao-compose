@@ -8,35 +8,36 @@ import com.a10miaomiao.bilimiao.comm.exception.AreaLimitException
 import com.a10miaomiao.bilimiao.comm.network.ApiHelper
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
 import com.a10miaomiao.bilimiao.comm.network.MiaoHttp
-import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.gson
+import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.json
 import com.a10miaomiao.bilimiao.comm.proxy.ProxyServerInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 class PlayerAPI {
 
-    private fun getVideoHeaders(avid: String) = mapOf(
+    private fun getVideoHeaders(avid: Long) = mapOf(
         "Referer" to "https://www.bilibili.com/av$avid",
         "User-Agent" to "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
     )
 
 
     fun getPlayerV2Info(
-        aid: String,
+        aid: Long,
         cid: String,
     ) = MiaoHttp.request {
         url = BiliApiService.biliApi(
             "x/player/v2",
-            "aid" to aid,
+            "aid" to aid.toString(),
             "cid" to cid,
         )
     }
     suspend fun getPlayerInfoAsync(
-        aid: String,
+        aid: Long,
         cid: String,
     ):ResultInfo<PlayerV2Info> = withContext(Dispatchers.IO) {
-        return@withContext getPlayerV2Info(aid, cid).awaitCall().gson<ResultInfo<PlayerV2Info>>()
+        return@withContext getPlayerV2Info(aid, cid).awaitCall().json<ResultInfo<PlayerV2Info>>()
     }
 
     fun getPlayerV2Info(
@@ -60,13 +61,14 @@ class PlayerAPI {
      * quality https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/video/videostream_url.md#qn%E8%A7%86%E9%A2%91%E6%B8%85%E6%99%B0%E5%BA%A6%E6%A0%87%E8%AF%86
      */
     suspend fun getVideoPlayUrl(
-        avid: String,
+        avid: Long,
         cid: String,
         quality: Int = 64,
-        fnval: Int = 4048,
+        // fnval: Int = 4048,
     ): PlayurlData {
+        val fnval = 4048 // only support dash for now
         val params = mutableMapOf<String, String?>(
-            "avid" to avid,
+            "avid" to avid.toString(),
             "cid" to cid,
             "qn" to quality.toString(),
             "fnval" to fnval.toString(),
@@ -81,7 +83,7 @@ class PlayerAPI {
         val res = MiaoHttp.request {
             url = BiliApiService.biliApi("x/player/playurl", *params.toList().toTypedArray())
             headers.putAll(getVideoHeaders(avid))
-        }.awaitCall().gson<ResultInfo<PlayurlData>>()
+        }.awaitCall().json<ResultInfo<PlayurlData>>()
         if (res.code == 0) {
             return res.data
         } else {
@@ -120,7 +122,7 @@ class PlayerAPI {
                 "pgc/player/api/playurl",
                 *params.toList().toTypedArray()
             )
-        }.awaitCall().gson<PlayurlData>()
+        }.awaitCall().json<PlayurlData>()
         if (res.code == 0) {
             return res
         } else if (res.code == -10403) {
@@ -180,7 +182,7 @@ class PlayerAPI {
                 "https://${proxyServer.host}/pgc/player/api/playurl",
                 *params.toList().toTypedArray()
             )
-        }.awaitCall().gson<PlayurlData>()
+        }.awaitCall().json<PlayurlData>()
         if (res.code == 0) {
             return res
         } else if (res.code == -10403) {
@@ -223,6 +225,7 @@ class PlayerAPI {
     }
 
     @Parcelize
+    @Serializable
     data class PlayurlData(
         val accept_description: List<String>,
         val accept_format: String,
@@ -236,16 +239,17 @@ class PlayerAPI {
         val seek_type: String,
         // 时长，毫秒
         val timelength: Int,
-        val video_codecid: Int,
+        val videoCodecId: Int,
         val durl: List<Durl>?,
         val dash: Dash?,
-        val code: Int,
+        val code: Int?,
         val support_formats: List<SupportFormats>,
         val last_play_time: Long?,
-        val last_play_cid: String?,
+        val last_play_cid: Long?,
     ) : Parcelable
 
     @Parcelize
+    @Serializable
     data class Durl(
         val ahead: String,
         val length: Long,
@@ -256,6 +260,7 @@ class PlayerAPI {
     ) : Parcelable
 
     @Parcelize
+    @Serializable
     data class SupportFormats(
         val quality: Int,
         val format: String,
@@ -265,17 +270,19 @@ class PlayerAPI {
     ) : Parcelable
 
     @Parcelize
+    @Serializable
     data class Dash(
         // 时长，秒
         val duration: Long,
         val min_buffer_time: Double,
-        val video: List<DashItem>,
-        val audio: List<DashItem>?,
+        val video: List<VideoDashItem>,
+        val audio: List<AudioDashItem>?,
     ) : Parcelable
 
     @Parcelize
-    data class DashItem(
-        val id: Int,
+    @Serializable
+    data class VideoDashItem(
+        val id: Quality,
         val bandwidth: Int,
         val base_url: String,
         val backup_url: List<String>,
@@ -287,11 +294,47 @@ class PlayerAPI {
         val frame_rate: String,
         val segment_base: SegmentBase,
     ) : Parcelable
+    @Parcelize
+    @Serializable
+    data class AudioDashItem(
+        val id: Quality,
+        val bandwidth: Int,
+        val base_url: String,
+        val backup_url: List<String>,
+        val mime_type: String,
+        val codecid: Int,
+        val codecs: String,
+        val segment_base: SegmentBase,
+    ) : Parcelable
 
     @Parcelize
+    @Serializable
     data class SegmentBase(
         val initialization: String,
         val index_range: String,
     ) : Parcelable
+}
+
+@JvmInline
+@Parcelize
+@Serializable
+value class Quality(
+     val code:Int
+) : Parcelable {
+
+//    @JvmInline
+//    value class R240P(6):VideoQuality(6),
+//    R360P(16),
+//    R480P(32),
+//    R720P(64),
+//    R720P60F(74),
+//    R1080P(80), // Default
+//    R1080P60F(116),
+//    R4K(120),
+//    HDR(124), // DASH only
+//    DOLBY_VISION(126), // DASH only
+//    R8K(127), // DASH only
+}
+enum class AudioQuality(code:Int) {
 
 }

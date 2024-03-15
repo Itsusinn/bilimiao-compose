@@ -100,9 +100,9 @@ object BiliPalyUrlHelper {
                         size = 0,
                         md5 = "",
                         no_rexcode = false,
-                        frame_rate = audioDash.frame_rate,
-                        width = audioDash.width,
-                        height = audioDash.height,
+                        frame_rate = null,
+                        width = null,
+                        height = null,
                         dash_drm_type = 0
                     )
                 )
@@ -218,9 +218,9 @@ object BiliPalyUrlHelper {
                         size = 0,
                         md5 = "",
                         no_rexcode = false,
-                        frame_rate = audioDash.frame_rate,
-                        width = audioDash.width,
-                        height = audioDash.height,
+                        frame_rate = null,
+                        width = null,
+                        height = null,
                         dash_drm_type = 0
                     )
                 )
