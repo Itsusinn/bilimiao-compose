@@ -25,20 +25,12 @@ android {
 
     defaultConfig {
         applicationId = "com.a10miaomiao.bilimiao.compose"
-        minSdk = 21
+        minSdk = 21 // okhttp
         targetSdk = 34
         versionCode = verCode
         versionName = verName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        ndk {
-            abiFilters.add("arm64-v8a")
-            abiFilters.add("armeabi-v7a")
-            abiFilters.add("armeabi")
-            abiFilters.add("x86")
-            abiFilters.add("x86_64")
-        }
     }
 
     val releaseSigning = if (project.hasProperty("releaseStoreFile")) {
@@ -73,6 +65,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -113,7 +106,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.browser)
 
-    implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.kotlinx.coroutines.android)
     // media3
     implementation(libs.media3)
