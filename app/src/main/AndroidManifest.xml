@@ -27,6 +27,7 @@
         android:theme="@style/Theme.Bilimiao"
         android:largeHeap="true"
         android:enableOnBackInvokedCallback="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="UnusedAttribute">
 
         <meta-data

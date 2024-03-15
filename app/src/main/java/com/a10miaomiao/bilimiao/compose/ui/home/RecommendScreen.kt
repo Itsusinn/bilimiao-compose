@@ -70,7 +70,7 @@ fun RecommendScreen(navigator: DestinationsNavigator) = Box(
             val info = BiliApiService.homeApi.recommendListAwait(0).data.items.map {
                 VideoInfo(
                     it.title,
-                    it.cover.replace("http://","https://"),
+                    it.cover,
                     it.param,
                     it.card_goto,
                     it.args.up_name ?: "UnknownUp"
