@@ -65,7 +65,7 @@ class PlayerAPI {
         cid: String,
         quality: Int = 64,
         // fnval: Int = 4048,
-    ): PlayurlData {
+    ): Result<PlayurlData> {
         val fnval = 4048 // only support dash for now
         val params = mutableMapOf<String, String?>(
             "avid" to avid.toString(),
@@ -84,10 +84,10 @@ class PlayerAPI {
             url = BiliApiService.biliApi("x/player/playurl", *params.toList().toTypedArray())
             headers.putAll(getVideoHeaders(avid))
         }.awaitCall().json<ResultInfo<PlayurlData>>()
-        if (res.code == 0) {
-            return res.data
+        return if (res.code == 0 && res.data != null) {
+            Result.success(res.data)
         } else {
-            throw Exception(res.message)
+            Result.failure(Exception(res.message))
         }
     }
     /**
@@ -239,7 +239,7 @@ class PlayerAPI {
         val seek_type: String,
         // 时长，毫秒
         val timelength: Int,
-        val videoCodecId: Int,
+        val videoCodecid: Int,
         val durl: List<Durl>?,
         val dash: Dash?,
         val code: Int?,

@@ -1,15 +1,13 @@
 package com.a10miaomiao.bilimiao.comm.apis
 
-import android.util.Base64
 import com.a10miaomiao.bilimiao.comm.BilimiaoCommApp
+import com.a10miaomiao.bilimiao.comm.entity.ResultInfo
+import com.a10miaomiao.bilimiao.comm.entity.auth.QRLoginInfo
 import com.a10miaomiao.bilimiao.comm.network.ApiHelper
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
 import com.a10miaomiao.bilimiao.comm.network.MiaoHttp
+import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.json
 import com.a10miaomiao.bilimiao.comm.utils.RSAUtil
-import java.security.KeyFactory
-import java.security.spec.X509EncodedKeySpec
-import java.util.*
-import javax.crypto.Cipher
 
 class AuthApi {
 
@@ -240,13 +238,20 @@ class AuthApi {
     /**
      * 获取登录二维码
      */
-    fun qrCode() = MiaoHttp.request {
-        url = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code"
-        formBody = ApiHelper.createParams(
-            "local_id" to BilimiaoCommApp.commApp.getBilibiliBuvid(),
-        )
-        method = MiaoHttp.POST
-        // Response: QRLoginInfo
+    suspend fun qrCode(): Result<QRLoginInfo> {
+        val res = MiaoHttp.request {
+            url = "https://passport.bilibili.com/x/passport-tv-login/qrcode/auth_code"
+            formBody = ApiHelper.createParams(
+                "local_id" to BilimiaoCommApp.commApp.getBilibiliBuvid(),
+            )
+            method = MiaoHttp.POST
+            // Response: QRLoginInfo
+        }.awaitCall().json<ResultInfo<QRLoginInfo>>()
+        return if (res.code == 0 && res.data != null) {
+            Result.success(res.data)
+        } else {
+            Result.failure(Exception(res.message))
+        }
     }
 
     /**

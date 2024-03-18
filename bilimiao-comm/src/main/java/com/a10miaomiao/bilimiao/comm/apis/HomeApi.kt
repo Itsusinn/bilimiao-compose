@@ -31,6 +31,12 @@ class HomeApi {
             "device_type" to "0",
             "pull" to isPull.toString().lowercase(Locale.getDefault()),
         )
-    }.awaitCall().json<ResultInfo<HomeRecommendInfo>>()
+    }.awaitCall().json<ResultInfo<HomeRecommendInfo>>().let {
+        if (it.isSuccess && it.data != null){
+            Result.success(it.data)
+        } else {
+            Result.failure(Exception(it.message))
+        }
+    }
 
 }

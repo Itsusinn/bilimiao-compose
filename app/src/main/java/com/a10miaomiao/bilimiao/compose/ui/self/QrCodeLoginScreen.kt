@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import com.a10miaomiao.bilimiao.comm.BilimiaoCommApp
 import com.a10miaomiao.bilimiao.comm.entity.ResultInfo
 import com.a10miaomiao.bilimiao.comm.entity.auth.LoginInfo
-import com.a10miaomiao.bilimiao.comm.entity.auth.QRLoginInfo
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
 import com.a10miaomiao.bilimiao.comm.network.MiaoHttp.Companion.json
 import com.a10miaomiao.bilimiao.comm.utils.Log
@@ -51,18 +50,11 @@ fun QrCodeLoginScreen(navigator: DestinationsNavigator) {
     LaunchedEffect(needFetch){
         if (!needFetch) return@LaunchedEffect
         if (qrCodeContent.isNotEmpty()) return@LaunchedEffect
-        val res = BiliApiService.authApi
-            .qrCode()
-            .awaitCall()
-            .json<ResultInfo<QRLoginInfo>>()
+        val res = BiliApiService.authApi.qrCode().getOrThrow()
 
-        if (res.isSuccess) {
-            qrCodeContent = res.data.url
-            authCode = res.data.auth_code
-            needFetch = false
-        } else {
-            // do something
-        }
+        qrCodeContent = res.url
+        authCode = res.auth_code
+        needFetch = false
     }
     LaunchedEffect(authCode){
         if (authCode.isEmpty()) return@LaunchedEffect
@@ -85,7 +77,7 @@ fun QrCodeLoginScreen(navigator: DestinationsNavigator) {
                 }
                 0 -> {
                     // 成功
-                    val loginInfo = res.data.toLoginInfo()
+                    val loginInfo = res.data!!.toLoginInfo()
                     BilimiaoCommApp.commApp.saveAuthInfo(loginInfo)
                     Log.debug { loginInfo.toString() }
                     var userState by UserState
