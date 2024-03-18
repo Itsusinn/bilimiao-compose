@@ -22,19 +22,23 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.ui.PlayerView
 import com.a10miaomiao.bilimiao.comm.apis.PlayerAPI
 import com.a10miaomiao.bilimiao.comm.entity.player.PlayerV2Info
 import com.a10miaomiao.bilimiao.comm.entity.video.VideoInfo
 import com.a10miaomiao.bilimiao.comm.network.BiliApiService
 import com.a10miaomiao.bilimiao.comm.utils.Log
-import com.a10miaomiao.bilimiao.compose.ui.tool.customCaMediaSourceFactory
+import com.a10miaomiao.bilimiao.compose.ui.tool.customDataSourceFactory
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.async
+
 
 @OptIn(UnstableApi::class)
 @Composable
@@ -49,8 +53,15 @@ fun VideoViewerScreen(
     Text(text = "$type $id")
     if (type!="av") return@Box
     val context = LocalContext.current
+    val exoDataSourceFactory = remember {
+        customDataSourceFactory(context)
+    }
     val exoPlayer = remember {
-        ExoPlayer.Builder(context, customCaMediaSourceFactory(context)).build()
+        val audioAttributes: AudioAttributes = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
+            .build()
+        ExoPlayer.Builder(context, exoDataSourceFactory).setAudioAttributes(audioAttributes, true).build()
     }
     var videoInfo by rememberSaveable {
         mutableStateOf<VideoInfo?>(null)
@@ -72,7 +83,7 @@ fun VideoViewerScreen(
         }
         playerInfo = info.await()
 
-        val playUrl = url.await()
+        val playUrl = url.await().getOrThrow()
         dash = playUrl.dash
         Log.info { dash.toString() }
     }
@@ -80,7 +91,18 @@ fun VideoViewerScreen(
         if (dash == null) return@LaunchedEffect
         val dash = dash!!
         val video = dash.video.first()
-        exoPlayer.setMediaItem(MediaItem.fromUri(video.base_url))
+        val audio = dash.audio?.first()
+        Log.debug { "Playing $video" }
+        val media = if (audio == null){
+            exoDataSourceFactory.createMediaSource(MediaItem.fromUri(video.base_url))
+        } else {
+            // ProgressiveMediaSource
+            val video = exoDataSourceFactory.createMediaSource(MediaItem.fromUri(video.base_url))
+            val audio = exoDataSourceFactory.createMediaSource(MediaItem.fromUri(audio.base_url))
+            MergingMediaSource(video, audio)
+        }
+        exoPlayer.setMediaSource(media)
+
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
     }
@@ -110,6 +132,7 @@ fun VideoViewerScreen(
             update = {
                 when (lifecycle) {
                     Lifecycle.Event.ON_PAUSE -> {
+
                         it.onPause()
                         it.player?.pause()
                     }
