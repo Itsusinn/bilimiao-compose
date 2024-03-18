@@ -114,6 +114,7 @@ class MiaoHttp(var url: String? = null) {
         val JSON = Json {
             ignoreUnknownKeys = true
             explicitNulls = false
+
             namingStrategy = JsonNamingStrategy.SnakeCase
         }
         @OptIn(ExperimentalSerializationApi::class)

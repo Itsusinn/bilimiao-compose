@@ -140,7 +140,7 @@ data class PlayerV2Info(
     data class SubtitleX(
         val ai_status: Int,
         val ai_type: Int,
-        val id: String,
+        val id: Long,
         val id_str: String,
         val is_lock: Boolean,
         val lan: String,

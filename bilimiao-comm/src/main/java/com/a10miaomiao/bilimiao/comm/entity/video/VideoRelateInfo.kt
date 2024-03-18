@@ -10,13 +10,13 @@ data class VideoRelateInfo (
     // 0/1/2
     val ad_index: Int?,
     // av format avid
-    val aid: Int,
+    val aid: Int?,
     // 0
     val card_index: Int?,
-    val cid: Double,
+    val cid: Double?,
 //    val client_ip: String,
     // seconds
-    val duration: Long,
+    val duration: Int?,
     // av
     val goto: String,
     val is_ad_loc: Boolean?,

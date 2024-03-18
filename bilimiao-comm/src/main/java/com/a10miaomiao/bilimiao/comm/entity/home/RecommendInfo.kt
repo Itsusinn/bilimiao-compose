@@ -28,17 +28,18 @@ data class RecommendCardInfo (
     val cover_left_text_1: String,
     val cover_left_icon_1: Int,
     val cover_left_1_content_description: String,
-    val cover_left_text_2: String,
-    val cover_left_icon_2: Int,
-    val cover_left_2_content_description: String,
-    val cover_right_text: String,
-    val cover_right_content_description: String,
-    val can_play: Int,
+    val cover_left_text_2: String?,
+    val cover_left_icon_2: Int?,
+    val cover_left_2_content_description: String?,
+    val cover_right_text: String?, // "0:19"
+    val cover_right_content_description: String?, // "0分钟19秒"
+    val can_play: Int?,
     val three_point_v2: List<ThreePointV2Info>,
-    val desc_button: DescButtonInfo,
-    val goto_icon: GotoIconInfo,
+
+    val desc_button: DescButtonInfo?,
+    val goto_icon: GotoIconInfo?,
     val args: RecommendCardArgsInfo,
-    val player_args: RecommendCardPlayerArgsInfo,
+    val player_args: RecommendCardPlayerArgsInfo?,
 ) : Parcelable {
     @Parcelize
     @Serializable
@@ -65,7 +66,7 @@ data class RecommendCardInfo (
     data class DescButtonInfo(
         val type: Int,
         val text: String,
-        val uri: String,
+        val uri: String?,
         val event: String,
         val event_v2: String?,
     ) : Parcelable

@@ -6,11 +6,10 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import com.a10miaomiao.bilimiao.comm.network.ApiHelper
 
 @OptIn(UnstableApi::class)
-fun customCaMediaSourceFactory(context: Context): DefaultMediaSourceFactory {
-    ApiHelper
+fun customDataSourceFactory(context: Context): DefaultMediaSourceFactory {
+
     return DefaultMediaSourceFactory(context)
         .setDataSourceFactory(
             DefaultDataSource.Factory(

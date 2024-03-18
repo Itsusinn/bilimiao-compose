@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResultInfo<T>(
     val code: Int,
-    val `data`: T,
+    val `data`: T?,
     val message: String,
     val ttl: Int,
 ) {

@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class VideoStaffInfo (
-    var mid: String,
+    var mid: Int,
     var title: String,
     var face: String,
     var name: String
