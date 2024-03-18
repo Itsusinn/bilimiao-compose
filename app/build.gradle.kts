@@ -117,7 +117,6 @@ dependencies {
 
     // serde & net
     implementation(libs.kotlinx.serde.json) //!! https://github.com/Kotlin/kotlinx.serialization?tab=readme-ov-file#android
-    // implementation(libs.gson)
     implementation(libs.okhttp3)
     implementation(libs.grpc.protobuf.lite)
     // implementation(libs.grpc.stub)

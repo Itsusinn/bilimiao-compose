@@ -43,6 +43,7 @@ fun HomeScreen(navigator: DestinationsNavigator) {
     LaunchedEffect(topBarState) {
         pagerState.animateScrollToPage(topBarState)
     }
+
     Column(
         modifier = Modifier.fillMaxHeight(),
     ) {
@@ -69,9 +70,9 @@ fun HomeScreen(navigator: DestinationsNavigator) {
         HorizontalPager(
             state = pagerState,
             modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .weight(1f),
+            Modifier
+                .fillMaxHeight()
+                .weight(1f),
         ) { index ->
             Box(
                 modifier = Modifier.fillMaxSize(),

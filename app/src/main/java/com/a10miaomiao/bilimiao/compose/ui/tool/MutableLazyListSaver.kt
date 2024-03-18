@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import kotlin.math.max
 
 class MutableLazyListSaver<T : Any?>(
     private val listState: LazyListState
@@ -17,8 +18,8 @@ class MutableLazyListSaver<T : Any?>(
         return if (visible.isEmpty()) {
             arrayListOf()
         } else {
-            val first = visible.first().index
-            val last = visible.last().index + 1
+            val first = max(visible.first().index - visible.count(),0)
+            val last =  minOf(visible.last().index + visible.count(), value.size)
             ArrayList(value.subList(first, last))
         }
     }

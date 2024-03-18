@@ -66,8 +66,8 @@ fun RecommendScreen(navigator: DestinationsNavigator) = Box(
         if (!needFetch) return@LaunchedEffect
 
         fetching = true
-        repeat(2){
-            val info = BiliApiService.homeApi.recommendListAwait(0).data.items.map {
+        repeat(5){
+            val info = BiliApiService.homeApi.recommendList(0).getOrThrow().items.map {
                 VideoInfo(
                     it.title,
                     it.cover,
