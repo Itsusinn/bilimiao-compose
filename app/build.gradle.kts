@@ -21,7 +21,7 @@ fun Project.exec(command: String): String = providers.exec {
 
 android {
     namespace = "com.a10miaomiao.bilimiao.compose"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.a10miaomiao.bilimiao.compose"

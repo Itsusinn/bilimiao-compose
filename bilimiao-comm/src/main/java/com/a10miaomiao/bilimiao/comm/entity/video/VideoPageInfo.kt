@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class VideoPageInfo(
-    val cid: Int,
+    val cid: Long,
 //    val dimension: Dimension,
 //    val dm: Dm,
     val dmlink: String,

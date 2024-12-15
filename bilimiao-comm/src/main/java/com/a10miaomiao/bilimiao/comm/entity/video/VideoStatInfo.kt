@@ -7,15 +7,15 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class VideoStatInfo(
-    val aid: Int,
-    var coin: Int,
-    val danmaku: Int,
-    val dislike: Int,
-    var favorite: Int,
-    val his_rank: Int,
-    var like: Int,
-    val now_rank: Int,
-    val reply: Int,
-    val share: Int,
+    val aid: Long,
+    var coin: Long,
+    val danmaku: Long,
+    val dislike: Long,
+    var favorite: Long,
+    val his_rank: Long,
+    var like: Long,
+    val now_rank: Long,
+    val reply: Long,
+    val share: Long,
     val view: Long
 ) : Parcelable
